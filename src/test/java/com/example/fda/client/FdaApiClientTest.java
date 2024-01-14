@@ -93,7 +93,7 @@ public class FdaApiClientTest {
     }
 
     @Test
-    void whenSearchDrugsByManufactureAndBrandName_thenHttpExceptionThrown() {
+    void shouldThrowHttpExceptionOnSearchDrugsByManufactureAndBrandName() {
         when(restTemplate.getForEntity(
                 "http://example.com/api?search=openfda.manufacturer_name:" + TEST_MANUFACTURER_NAME
                         + "+AND+openfda.brand_name:" + TEST_BRAND_NAME + "&skip="+ SKIP +"&limit="+ LIMIT,
@@ -105,7 +105,7 @@ public class FdaApiClientTest {
     }
 
     @Test
-    void whenSearchDrugsByManufactureAndBrandName_thenRestClientExceptionThrown() {
+    void shouldThrowRestClientExceptionOnSearchDrugsByManufactureAndBrandName() {
         when(restTemplate.getForEntity("http://example.com/api?search=openfda.manufacturer_name:" + TEST_MANUFACTURER_NAME
                 + "+AND+openfda.brand_name:" + TEST_BRAND_NAME + "&skip=0&limit=5", FdaDrugResponse.class))
                 .thenThrow(new RestClientException("Error occurred"));
