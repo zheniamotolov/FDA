@@ -95,7 +95,7 @@ public class DrugControllerIntegrationTest {
         when(drugRecordDetailsService.saveDrugRecordDetails(any(DrugRecordDetailsDto.class)))
                 .thenReturn(drugRecordDetailsDto);
 
-        mockMvc.perform(post("/api/drugs")
+        mockMvc.perform(post("/api/drugs/details")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(drugRecordDetailsDto)))
                 .andExpect(status().isOk())
@@ -122,7 +122,7 @@ public class DrugControllerIntegrationTest {
         Page<DrugRecordDetailsDto> detailsDtoPage = new PageImpl<>(dtoList, pageable, dtoList.size());
         when(drugRecordDetailsService.findDrugRecordDetails(pageable, TEST_APPLICATION_NUMBER))
                 .thenReturn(detailsDtoPage);
-        mockMvc.perform(get("/api/drugs/stored")
+        mockMvc.perform(get("/api/drugs/details")
                         .param("applicationNumber", TEST_APPLICATION_NUMBER)
                         .param("page", String.valueOf(pageNumber))
                         .param("size", String.valueOf(pageSize)))
@@ -151,7 +151,7 @@ public class DrugControllerIntegrationTest {
     void shouldHandleDrugRecordDetailsValidationException() throws Exception {
         DrugRecordDetailsDto incompleteDto = new DrugRecordDetailsDto();
 
-        mockMvc.perform(post("/api/drugs")
+        mockMvc.perform(post("/api/drugs/details")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(incompleteDto)))
                 .andExpect(status().isBadRequest())

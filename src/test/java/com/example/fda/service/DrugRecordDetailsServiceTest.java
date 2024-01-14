@@ -71,9 +71,7 @@ class DrugRecordDetailsServiceTest {
     void shouldThrowExceptionWhenSaveDrugRecordDetails() {
         when(drugRecordDetailsRepository.existsByApplicationNumber(drugRecordDetailsDto.getApplicationNumber())).thenReturn(true);
 
-        assertThrows(DataIntegrityViolationException.class, () -> {
-            drugRecordDetailsService.saveDrugRecordDetails(drugRecordDetailsDto);
-        });
+        assertThrows(DataIntegrityViolationException.class, () -> drugRecordDetailsService.saveDrugRecordDetails(drugRecordDetailsDto));
     }
 
     @Test

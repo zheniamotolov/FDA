@@ -30,16 +30,16 @@ public class DrugController {
         return ResponseEntity.ok(drugRecordService.findDrugRecords(pageable, manufactureName, brandName));
     }
 
-    @GetMapping("/stored")
+    @GetMapping("details")
     @Operation(summary = "Show drug record applications stored in the system")
     public ResponseEntity<Page<DrugRecordDetailsDto>> findStoredDrugRecordDetails(@PageableDefault() Pageable pageable,
                                                                                   @RequestParam(value = "applicationNumber", defaultValue = "", required = false) String applicationNumber) {
         return ResponseEntity.ok(drugRecordDetailsService.findDrugRecordDetails(pageable, applicationNumber));
     }
 
-    @PostMapping()
+    @PostMapping("/details")
     @Operation(summary = "Store specific drug record applications details")
-    public ResponseEntity<DrugRecordDetailsDto> saveDrugRecord(@Valid @RequestBody DrugRecordDetailsDto DrugRecordDetailsDto) {
+    public ResponseEntity<DrugRecordDetailsDto> saveDrugRecordDetails(@Valid @RequestBody DrugRecordDetailsDto DrugRecordDetailsDto) {
         return ResponseEntity.ok(drugRecordDetailsService.saveDrugRecordDetails(DrugRecordDetailsDto));
     }
 }
