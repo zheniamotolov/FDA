@@ -31,7 +31,7 @@ public class DrugController {
         return ResponseEntity.ok(drugRecordService.findDrugRecords(page, size, manufactureName, brandName));
     }
 
-    @GetMapping("details")
+    @GetMapping("/details")
     @Operation(summary = "Show drug record applications stored in the system")
     public ResponseEntity<Page<DrugRecordDetailsDto>> findStoredDrugRecordDetails(@PageableDefault() Pageable pageable,
                                                                                   @RequestParam(value = "applicationNumber", defaultValue = "", required = false) String applicationNumber) {
