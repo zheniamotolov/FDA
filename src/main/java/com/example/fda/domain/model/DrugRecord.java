@@ -14,12 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrugRecord {
+    private List<Submission> submissions;
     @JsonProperty("application_number")
     private String applicationNumber;
     @JsonProperty("sponsor_name")
     private String sponsorName;
     private List<Product> products;
     private OpenFda openfda;
-    private List<Submission> submissions;
 
 }

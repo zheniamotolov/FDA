@@ -13,6 +13,8 @@ public class Product {
     private String productNumber;
     @JsonProperty("dosage_form")
     private String dosageForm;
+    @JsonProperty("brand_name")
+    private String brandName;
     @JsonProperty("marketing_status")
     private String marketingStatus;
     @JsonProperty("reference_drug")
