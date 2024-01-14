@@ -14,9 +14,9 @@ public class DrugRecordService {
 
     private final FdaApiClient fdaApiClient;
 
-    public List<DrugRecord> findDrugRecords(Pageable pageable, String manufactureName, String brandName) {
-        int skip = pageable.getPageNumber() * pageable.getPageSize();
-        int limit = pageable.getPageSize();
+    public List<DrugRecord> findDrugRecords(int page, int size, String manufactureName, String brandName) {
+        int skip = page * size;
+        int limit = size;
         return fdaApiClient.searchDrugsByManufactureAndBrandName(manufactureName, brandName, skip, limit);
     }
 

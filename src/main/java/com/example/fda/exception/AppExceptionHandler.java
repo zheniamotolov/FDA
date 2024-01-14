@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +37,29 @@ public class AppExceptionHandler {
         log.error("HttpClientErrorException: Status code: {}, Message: {}", ex.getStatusCode(), ex.getMessage(), ex);
 
         return new ResponseEntity<>(apiErrorResponse, ex.getStatusCode());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiErrorResponse> handleHttpRequestMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException ex) {
+
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(
+                "Request method '" + ex.getMethod() + "' not supported");
+
+        log.error("HttpRequestMethodNotSupportedException: Supported methods: {}, Message: {}",
+                ex.getSupportedHttpMethods(), ex.getMessage(), ex);
+
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(
+                "Request method '" + ex.getResourcePath() + "' not supported");
+
+        log.error("NoResourceFoundException: {}", ex.getMessage(), ex);
+
+        return new ResponseEntity<>(apiErrorResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(Exception.class)

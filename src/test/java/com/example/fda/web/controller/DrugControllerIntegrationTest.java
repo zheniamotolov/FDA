@@ -22,8 +22,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,9 +52,8 @@ public class DrugControllerIntegrationTest {
 
     @Test
     void shouldFindDrugRecords() throws Exception {
-        int pageNumber = 0;
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        int page = 0;
+        int size = 10;
 
         OpenFda openFda = new OpenFda();
         openFda.setBrandNames(List.of(TEST_BRAND));
@@ -68,14 +66,14 @@ public class DrugControllerIntegrationTest {
 
         List<DrugRecord> drugRecordList = List.of(mockDrugRecord);
 
-        when(drugRecordService.findDrugRecords(pageable, TEST_MANUFACTURER_NAME, TEST_BRAND))
+        when(drugRecordService.findDrugRecords(page, size, TEST_MANUFACTURER_NAME, TEST_BRAND))
                 .thenReturn(drugRecordList);
 
         mockMvc.perform(get("/api/drugs")
                         .param("manufactureName", TEST_MANUFACTURER_NAME)
                         .param("brandName", TEST_BRAND)
-                        .param("page", String.valueOf(pageNumber))
-                        .param("size", String.valueOf(pageSize)))
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].application_number").value(TEST_APPLICATION_NUMBER))
@@ -108,9 +106,9 @@ public class DrugControllerIntegrationTest {
 
     @Test
     void shouldFindStoredDrugRecordDetails() throws Exception {
-        int pageNumber = 0;
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
         DrugRecordDetailsDto mockDrugRecordDetailsDto = new DrugRecordDetailsDto(
                 TEST_APPLICATION_NUMBER,
                 List.of(TEST_MANUFACTURER_NAME),
@@ -124,8 +122,8 @@ public class DrugControllerIntegrationTest {
                 .thenReturn(detailsDtoPage);
         mockMvc.perform(get("/api/drugs/details")
                         .param("applicationNumber", TEST_APPLICATION_NUMBER)
-                        .param("page", String.valueOf(pageNumber))
-                        .param("size", String.valueOf(pageSize)))
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content[0].application_number").value(TEST_APPLICATION_NUMBER))
@@ -136,7 +134,7 @@ public class DrugControllerIntegrationTest {
 
     @Test
     void shouldHandleFindDrugRecordsException() throws Exception {
-        when(drugRecordService.findDrugRecords(any(Pageable.class), anyString(), anyString()))
+        when(drugRecordService.findDrugRecords(anyInt(), anyInt(), anyString(), anyString()))
                 .thenThrow(new RestClientException("External API is not available"));
 
         mockMvc.perform(get("/api/drugs")

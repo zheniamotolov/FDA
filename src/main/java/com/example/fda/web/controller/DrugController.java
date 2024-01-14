@@ -24,10 +24,11 @@ public class DrugController {
 
     @GetMapping()
     @Operation(summary = "Search drug application record in FDA by manufactureName and brandName")
-    public ResponseEntity<List<DrugRecord>> findDrugRecords(@PageableDefault() Pageable pageable,
+    public ResponseEntity<List<DrugRecord>> findDrugRecords(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
                                                             @RequestParam(value = "manufactureName", defaultValue = "", required = false) String manufactureName,
                                                             @RequestParam(value = "brandName", defaultValue = "", required = false) String brandName) {
-        return ResponseEntity.ok(drugRecordService.findDrugRecords(pageable, manufactureName, brandName));
+        return ResponseEntity.ok(drugRecordService.findDrugRecords(page, size, manufactureName, brandName));
     }
 
     @GetMapping("details")
