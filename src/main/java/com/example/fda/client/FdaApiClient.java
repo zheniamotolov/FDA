@@ -28,16 +28,11 @@ public class FdaApiClient {
     private final RestTemplate restTemplate;
 
     public List<DrugRecord> searchDrugsByManufactureAndBrandName(String manufactureName, String brandName, int skip, int limit) {
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(fdaDrugApiUrl)
-                .queryParam(SEARCH, constructSearchQuery(manufactureName, brandName))
-                .queryParam(SKIP, skip)
-                .queryParam(LIMIT, limit);
-        String requestUrl = builder.toUriString();
+        String requestUrl = buildUrl(manufactureName, brandName, skip, limit);
 
         try {
             ResponseEntity<FdaDrugResponse> fdaDrugResponse = restTemplate.getForEntity(requestUrl, FdaDrugResponse.class);
-            if (fdaDrugResponse.getStatusCode().is2xxSuccessful() && fdaDrugResponse.getBody() != null) {
+            if (fdaDrugResponse.getBody() != null) {
                 return fdaDrugResponse.getBody().getResults();
             } else {
                 throw new RestClientException("Failed to fetch drug records from FDA API");
@@ -46,6 +41,16 @@ public class FdaApiClient {
             log.error("Error occurred when calling FDA API: {}", ex.getMessage(), ex);
             throw ex;
         }
+    }
+
+    private String buildUrl(String manufactureName, String brandName, int skip, int limit) {
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(fdaDrugApiUrl)
+                .queryParam(SEARCH, constructSearchQuery(manufactureName, brandName))
+                .queryParam(SKIP, skip)
+                .queryParam(LIMIT, limit);
+        String requestUrl = builder.toUriString();
+        return requestUrl;
     }
 
     private String constructSearchQuery(String manufactureName, String brandName) {
